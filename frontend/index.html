@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PayDrishti · Secure Checkout</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="card">
+    <header class="brand">
+      <div class="logo">P</div>
+      <div>
+        <h1>PayDrishti</h1>
+        <p class="tagline">AI payment-safety layer · checkout demo</p>
+      </div>
+      <span id="mode-badge" class="badge">…</span>
+    </header>
+
+    <section class="checkout">
+      <label class="field">
+        <span>Pay to</span>
+        <select id="payee"></select>
+      </label>
+      <p id="payee-note" class="note"></p>
+
+      <label class="field">
+        <span>Amount (USD)</span>
+        <input id="amount" type="number" min="1" step="1" value="250">
+      </label>
+
+      <div id="pay-area">
+        <div id="paypal-button-container"></div>
+        <button id="mock-pay" class="pay-btn" hidden>Pay with PayPal</button>
+      </div>
+
+      <div id="status" class="status" hidden></div>
+    </section>
+
+    <footer class="foot">
+      PayDrishti never blocks your payment — it only warns you, and you decide.
+    </footer>
+  </main>
+
+  <!-- interstitial modal -->
+  <div id="overlay" class="overlay" hidden>
+    <div class="modal" role="alertdialog" aria-labelledby="m-title">
+      <div class="modal-head">
+        <span class="warn-dot">!</span>
+        <h2 id="m-title">Hold on — this payment looks risky</h2>
+      </div>
+      <div class="score-row">
+        <div class="meter"><div id="meter-fill" class="meter-fill"></div></div>
+        <span id="score-label" class="score-label"></span>
+      </div>
+      <ul id="reasons" class="reasons"></ul>
+      <p id="warn-text" class="warn-text"></p>
+      <div class="modal-actions">
+        <button id="btn-cancel" class="btn-safe">Cancel payment</button>
+        <button id="btn-proceed" class="btn-risk">Pay anyway</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
