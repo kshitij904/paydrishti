@@ -65,10 +65,15 @@ function showInterstitial(risk) {
     ul.appendChild(li);
   });
   $("warn-text").textContent = risk.warning_text || "";
-  $("overlay").hidden = false;
+    $("overlay").hidden = false;
+  document.getElementById("pay-area").style.visibility = "hidden";
 }
 
-function hideInterstitial() { $("overlay").hidden = true; }
+
+function hideInterstitial() {
+  $("overlay").hidden = true;
+  document.getElementById("pay-area").style.visibility = "visible";
+}
 
 $("btn-cancel").onclick = () => {
   hideInterstitial();

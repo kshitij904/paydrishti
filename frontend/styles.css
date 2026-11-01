@@ -105,6 +105,7 @@ select:focus, input:focus { border-color: var(--accent); }
 /* interstitial */
 .overlay {
   position: fixed; inset: 0;
+     z-index: 2147483647;
   background: rgba(10,12,30,.55);
   display: grid; place-items: center; padding: 20px;
   animation: fade .15s ease;

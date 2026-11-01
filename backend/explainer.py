@@ -53,24 +53,34 @@ def _template(band: str, amount: float) -> str:
 def _prompt(score: int, reasons: list, amount: float, payee_label: str) -> str:
     flags = "; ".join(r["text"] for r in reasons[:5]) or "no specific flags"
     return (
-        "You write short scam warnings shown to someone at the moment they are "
-        "about to send money. Our fraud model flagged this payment as high risk.\n\n"
-        "Write 2-3 short sentences that:\n"
-        "- say plainly that this payment looks like a likely scam and they could "
-        "lose this money (state it directly in the first sentence)\n"
-        "- tell them to stop and verify the recipient through an official source "
-        "before paying\n"
-        "- stay calm and plain-spoken; do NOT blame the user\n\n"
-        "Rules: everyday words, no jargon (avoid phrases like 'cash-out purpose' "
-        "or 'taking precautions'), no corporate filler, no markdown, no invented "
-        "facts or phone numbers.\n\n"
-        "Good example tone: \"This payment looks like a likely scam, and if you "
-        "send it you may not get the money back. The account has the hallmarks of "
-        "ones used to collect scam payments. Please stop and confirm who you're "
-        "really paying through an official source first.\"\n\n"
-        f"Details: risk {score}/100, amount ${amount:.0f}, paying '{payee_label}'. "
-        f"Reasons: {flags}."
+        "Rewrite the following as ONE short scam warning for someone about to "
+        "send money. Output EXACTLY two sentences of plain English and nothing "
+        "else. Do not give options or alternatives, do not write a preamble, do "
+        "not use markdown, headings or lists, do not invent facts or phone "
+        "numbers. First sentence: say plainly this payment looks like a likely "
+        f"scam and they could lose the ${amount:.0f}. Second sentence: tell them "
+        f"to stop and verify '{payee_label}' through an official source before "
+        "paying. Stay calm; do not blame them.\n\n"
+        f"Context (do not quote verbatim): risk {score}/100. Reasons: {flags}.\n\n"
+        "Warning:"
     )
+
+
+def _clean(text: str) -> str:
+    """Keep only the first real warning: strip preambles, options, and any
+    repeated paragraphs a chatty local model might add."""
+    text = text.strip()
+    # split into paragraphs and drop obvious preamble/option lines
+    paras = [p.strip() for p in text.split("\n\n") if p.strip()]
+    bad_starts = ("here are", "here's", "here is", "sure", "option", "warning:",
+                  "note:", "i would", "as an", "certainly")
+    paras = [p for p in paras
+             if not p.lower().lstrip("*-# ").startswith(bad_starts)]
+    first = paras[0] if paras else text
+    # keep at most the first two sentences
+    import re
+    sentences = re.split(r"(?<=[.!?])\s+", first)
+    return " ".join(sentences[:2]).strip()
 
 
 def _ollama(prompt: str) -> str:
@@ -79,7 +89,7 @@ def _ollama(prompt: str) -> str:
     resp = requests.post(
         f"{host}/api/generate",
         json={"model": model, "prompt": prompt, "stream": False,
-              "options": {"temperature": 0.4, "num_predict": 160}},
+              "options": {"temperature": 0.2, "num_predict": 80}},
         timeout=30,
     )
     resp.raise_for_status()
@@ -126,6 +136,7 @@ def explain(score: int, band: str, reasons: list, amount: float,
         prompt = _prompt(score, reasons, amount, payee_label)
         text = {"ollama": _ollama, "anthropic": _anthropic,
                 "openai": _openai}[provider](prompt)
+        text = _clean(text)
         if text:
             return f"{text}\n\n{_helpline_line()}"
     except Exception:
