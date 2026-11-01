@@ -8,6 +8,16 @@ trafficking cash-out patterns, PayDrishti scores the payment with AI and shows a
 plain-language warning **before** the payment is captured — giving the person a
 chance to stop. The money is never auto-blocked; the human always decides.
 
+## See it
+
+| Checkout | AI warning before capture | Fraud network view |
+|---|---|---|
+| ![Checkout](docs/images/checkout.png) | ![Interstitial warning](docs/images/interstitial.png) | ![Network view](docs/images/network.png) |
+
+*Left: a normal checkout. Middle: the AI interstitial that fires on a risky
+payee, before the payment is captured. Right: disposable front accounts (amber)
+funnelling into the persistent cash-out cores (red) that PayDrishti detects.*
+
 ## Why this design
 
 Criminal payment operations churn through disposable front accounts, but they
@@ -57,6 +67,10 @@ Open http://localhost:8000 in your browser.
 
 It starts in **MOCK mode** with no PayPal keys needed — you can pick a payee,
 hit pay, and see the interstitial fire on risky payees right away.
+
+**Network view:** click "See the fraud network view" on the checkout (or open
+`/graph.html`) to see disposable front accounts funnelling into the persistent
+cash-out cores — the pattern PayDrishti detects.
 
 ### Enable AI-generated warnings (optional, free)
 

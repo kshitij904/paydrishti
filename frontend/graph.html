@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PayDrishti · Network View</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .graph-wrap { max-width: 980px; }
+    .graph-head { display: flex; align-items: center; gap: 12px; padding: 20px 22px; }
+    #net {
+      height: 560px; width: 100%;
+      background: #0f1226; border-radius: 0 0 20px 20px;
+    }
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      padding: 14px 22px; border-top: 1px solid var(--line);
+      font-size: 13px; color: var(--ink);
+    }
+    .legend b { font-weight: 600; }
+    .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+           margin-right: 6px; vertical-align: middle; }
+    .insight {
+      margin: 0; padding: 16px 22px; font-size: 13px; line-height: 1.5;
+      color: var(--muted); border-top: 1px solid var(--line);
+    }
+    .insight b { color: var(--ink); font-weight: 600; }
+    .nav { margin-left: auto; font-size: 13px; }
+    .nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <main class="card graph-wrap">
+    <header class="graph-head">
+      <div class="logo">P</div>
+      <div>
+        <h1>PayDrishti · Network view</h1>
+        <p class="tagline">how disposable accounts funnel into a persistent core</p>
+      </div>
+      <span class="nav"><a href="/">← back to checkout</a></span>
+    </header>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#e24b4a"></span><b>Persistent cash-out</b> — reused, hard to replace</span>
+      <span><span class="dot" style="background:#ef9f27"></span><b>Disposable front</b> — burner accounts</span>
+      <span><span class="dot" style="background:#9aa0ad"></span><b>Payer / victim</b></span>
+      <span><span class="dot" style="background:#1d9e75"></span><b>Legit merchant</b> — for contrast</span>
+    </div>
+
+    <div id="net"></div>
+
+    <p class="insight">
+      <b>What to notice:</b> many short-lived front accounts (amber) collapse onto a
+      few red cash-out hubs — the one piece of infrastructure criminals reuse and
+      can't cheaply discard. The legit merchants (teal) sit in separate, shallow
+      clusters. PayDrishti scores the <b>shape</b> of these funnels, not identities,
+      which is why it still works when the fronts are burners.
+    </p>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/dist/vis-network.min.js"></script>
+  <script src="/graph.js"></script>
+</body>
+</html>

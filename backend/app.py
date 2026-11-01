@@ -29,6 +29,7 @@ from pydantic import BaseModel
 import paypal_client as pp
 from risk_engine import RiskEngine
 from explainer import explain, active_provider
+from graph_data import build_graph
 
 load_dotenv()
 
@@ -65,6 +66,12 @@ def config():
         "currency": CURRENCY,
         "explainer": active_provider(),  # "none" | "ollama" | "anthropic" | "openai"
     }
+
+
+@app.get("/api/graph")
+def graph():
+    """Network graph: disposable fronts funnelling into persistent cores."""
+    return build_graph()
 
 
 @app.get("/api/payees")

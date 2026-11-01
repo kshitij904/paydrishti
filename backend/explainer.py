@@ -131,4 +131,3 @@ def explain(score: int, band: str, reasons: list, amount: float,
     except Exception:
         pass
     return _template(band, amount)
-
