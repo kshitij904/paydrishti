@@ -1,0 +1,24 @@
+# Render.com deployment blueprint for PayDrishti.
+# Secrets (PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET) are marked sync:false,
+# so they are NEVER stored in this file or in git — you enter them privately
+# in the Render dashboard. This runs the PayPal SANDBOX only (no real money).
+services:
+  - type: web
+    name: paydrishti
+    runtime: python
+    plan: free
+    # install deps, then generate the synthetic data + train the model on the host
+    buildCommand: "pip install -r requirements.txt && python backend/synth.py && python backend/model.py"
+    # serve the app; Render provides $PORT
+    startCommand: "cd backend && uvicorn app:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
+      - key: PAYPAL_ENV
+        value: sandbox
+      - key: LLM_PROVIDER
+        value: none          # cloud has no Ollama -> clean template warnings
+      - key: PAYPAL_CLIENT_ID
+        sync: false          # you enter this privately in the dashboard
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false          # you enter this privately in the dashboard
